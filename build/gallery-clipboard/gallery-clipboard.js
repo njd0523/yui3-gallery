@@ -515,8 +515,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
     });
     
-    Y.namespace("comms.ui");
-    Y.comms.ui.ClipBoard = ClipBoard;
+    Y.ClipBoard = ClipBoard;
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['node', 'plugin', 'substitute']});

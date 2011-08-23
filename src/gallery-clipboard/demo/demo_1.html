@@ -89,7 +89,7 @@
             node2 = Y.one(".b2");
             
         /* Set up Copy on Node 1 */
-        node1.plug(Y.comms.ui.ClipBoard, {
+        node1.plug(Y.ClipBoard, {
             page : Y.one(".container"),
             moviepath : MOVIE_PATH
         }).on("clipboard:load", function(e){
@@ -107,7 +107,7 @@
             logit("ERROR :"+e.error);
         });
         /* Set up Copy on Node 2 */
-        node2.plug(Y.comms.ui.ClipBoard, {
+        node2.plug(Y.ClipBoard, {
             page : Y.one(".container"),
             moviepath : MOVIE_PATH
         }).on("clipboard:load", function(e){
