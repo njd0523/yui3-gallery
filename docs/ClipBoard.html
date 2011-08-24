@@ -1,0 +1,1341 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: clipboard-plugin  ClipBoard   (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1314227630.89" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1314227630.89" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1314227630.89"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1314227630.89"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="Yahoo! UI Library">Yahoo! UI Library</a></h1>
+        <h3>clipboard-plugin&nbsp; <span class="subtitle">1.0.0</span></h3>
+        <a href="./index.html" title="Yahoo! UI Library">Yahoo! UI Library</a> 
+            &gt; <a href="./module_clipboard-plugin.html" title="clipboard-plugin">clipboard-plugin</a>
+                 &gt; ClipBoard 
+                
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <h2>
+                        
+
+                        
+                        
+                            Class <b property="yui:name">ClipBoard</b>
+                        <span class="extends">
+                           - extends <a href="Y.Plugin.Base.html" title="Y.Plugin.Base">Y.Plugin.Base</a>
+                        </span>
+
+                    </h2>
+                    <!-- class tree goes here -->
+                    
+                
+  
+
+                    <div class="summary description" property="yui:description">
+                        The ClipBoard class is desinged to be a node plugin and a wrapper over the flash movie
+to copy text contents to the OS clipboard. The class will place the flash movie below the given
+node so that a user action can trigger the copy of contents to the OS clip board using
+Flash's System.setClipboard method. Starting from flash 10, the clipboard can be set only
+off a user initiated event. So the JS class shall only set the string to be copied and will
+allow the flash movie's event to capture the user action and set the clipboard contents
+                    </div>
+
+                        <div class="section constructor details" rel="yui:constructor" resource="#constructor">
+                        <h3 id="constructor">Constructor</h3>
+                        <div class="content">
+                            <div class="detail">
+                                <strong property="yui:name">ClipBoard</strong>
+                                <code>
+                                    (
+                                    )
+                                </code>
+                                <div class="description">
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div rel="yui:properties" resource="#properties">
+                        <div class="section field details">
+                            <h3 id="properties">Properties</h3>
+                            <div class="content">
+                                    <div class="private" rel="yui:property" resource="#property_EMBED_TEMPLATE">
+                                    <h4><a name="property_EMBED_TEMPLATE" property="yui:name">EMBED_TEMPLATE</a>
+                                        - <code>private static <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            Template for embedding the flash movie in the embed tag. For most other browsers
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:property" resource="#property_OBJECT_TEMPLATE">
+                                    <h4><a name="property_OBJECT_TEMPLATE" property="yui:name">OBJECT_TEMPLATE</a>
+                                        - <code>private static <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            Template for embedding the flash movie in the object tag. Mainly for IE browsers
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:property" resource="#property_SWF_MOVIE_NAME">
+                                    <h4><a name="property_SWF_MOVIE_NAME" property="yui:name">SWF_MOVIE_NAME</a>
+                                        - <code>private static <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            Name of the flash movie
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div rel="yui:methods" resource="#methods">
+                        <div class="section method details">
+                            <h3 id="methods">Methods</h3>
+                            <div class="content">
+                                    <div class="private" rel="yui:method" resource="#method__alignMovie">
+                                    <h4>
+                                        <a name="method__alignMovie">_alignMovie</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         private 
+                                        
+                                        
+                                        Node
+                                            <strong property="yui:name">_alignMovie</strong>
+                                           (
+                                                
+                                                        
+                                                         d
+                                                    
+                                                
+                                                        , 
+                                                         h
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to align the movie to the given host with the specified dimensions
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">d</span>
+                                                        &lt;<span property="yui:type">Object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The dimensions object got from getHostDimensions</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">h</span>
+                                                        &lt;<span property="yui:type">Node</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The host node</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Node
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">The bounding box node</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:method" resource="#method__destructor">
+                                    <h4>
+                                        <a name="method__destructor">_destructor</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         private 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">_destructor</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Destructor method to clean up the flash movie clipboard
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:method" resource="#method__flashInterface">
+                                    <h4>
+                                        <a name="method__flashInterface">_flashInterface</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         private 
+                                        
+                                        
+                                        Void
+                                            <strong property="yui:name">_flashInterface</strong>
+                                           (
+                                                
+                                                        
+                                                         ev
+                                                    
+                                                
+                                                        , 
+                                                         a
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            The main method that is set on the "global" that will be the callback interface between
+the flash movie and javascript. All the flash movie events that are trapped and are of
+interest will be passed into the falsh interface. Based on the type of event, the
+method will dispatch the event to the most suitable node or handler
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">ev</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The event String</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">a</span>
+                                                        &lt;<span property="yui:type">Object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The flash call back object</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:method" resource="#method__getFlashMovieObj">
+                                    <h4>
+                                        <a name="method__getFlashMovieObj">_getFlashMovieObj</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         private 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">_getFlashMovieObj</strong>
+                                           (
+                                                
+                                                        
+                                                         d
+                                                    
+                                                
+                                                        , 
+                                                         f
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to create the flash object markup, create the Object or Embed element and append it
+to the "page"
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">d</span>
+                                                        &lt;<span property="yui:type">Object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The dimensions object got from getHostDimensions</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">f</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The global call back function name</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:method" resource="#method__getNodeSize">
+                                    <h4>
+                                        <a name="method__getNodeSize">_getNodeSize</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         private 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">_getNodeSize</strong>
+                                           (
+                                                
+                                                        
+                                                         node
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Return the size of the given node including border, padding and margin.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">node</span>
+                                                        &lt;<span property="yui:type">Node</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description"> The node for which the size needs to be computed</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_copy">
+                                    <h4>
+                                        <a name="method_copy">copy</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">copy</strong>
+                                           (
+                                                
+                                                        
+                                                         str
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to set the copy string into to movie. This method has to be called before the
+flash movie accepts the event to set the copy string to clip board. This method can
+also be called by using node.setAttribute("copy", "this is a string" );
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">str</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  the string to be copied</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_focus">
+                                    <h4>
+                                        <a name="method_focus">focus</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Void
+                                            <strong property="yui:name">focus</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Alias method to the flash movie focus method
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_getHostDimensions">
+                                    <h4>
+                                        <a name="method_getHostDimensions">getHostDimensions</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Object} { w : width, h : height, xy : NodeXY
+                                            <strong property="yui:name">getHostDimensions</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to get the dimensions of the host node so that the flash movie can be
+painted across the node.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Object} { w : width, h : height, xy : NodeXY
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_hide">
+                                    <h4>
+                                        <a name="method_hide">hide</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Void
+                                            <strong property="yui:name">hide</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to hide the flash movie once the copy has been done
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_initializer">
+                                    <h4>
+                                        <a name="method_initializer">initializer</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Void
+                                            <strong property="yui:name">initializer</strong>
+                                           (
+                                                
+                                                        
+                                                         config
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Initializer function to set up the flash movie if not already present on the "page",
+setup the flash - js interface, and align the movie to the host node
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">config</span>
+                                                        &lt;<span property="yui:type">Object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  the configuration attributes</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_removeEvent">
+                                    <h4>
+                                        <a name="method_removeEvent">removeEvent</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Boolean
+                                            <strong property="yui:name">removeEvent</strong>
+                                           (
+                                                
+                                                        
+                                                         n
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to remove the event on the flash movie. This method will makes sure that the
+event is removed only if all the node instances using the flash movie are free of any
+events binding. If there are any nodes that are listening to the flash movie event, then
+till a remove event for that node is called, the events will not be removed from the
+flash movie
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">n</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The name of the event</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Boolean
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">TRUE if success, FALSE if failure</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="private" rel="yui:method" resource="#method_setAttribute">
+                                    <h4>
+                                        <a name="method_setAttribute">setAttribute</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         private 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">setAttribute</strong>
+                                           (
+                                                
+                                                        
+                                                         type
+                                                    
+                                                
+                                                        , 
+                                                         value
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            The setAttribute method is trapped by the plugin and if the value set is copy, then we
+show the flash movie and then set the value to be copied. Now, when the user will
+initiate the event on the flash movie, we will set the contents of the keyboard
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">type</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The type of attribute to be set</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">value</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The attribute value to be set</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_setEvent">
+                                    <h4>
+                                        <a name="method_setEvent">setEvent</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Boolean
+                                            <strong property="yui:name">setEvent</strong>
+                                           (
+                                                
+                                                        
+                                                         n
+                                                    
+                                                
+                                                        , 
+                                                         cb
+                                                    
+                                                
+                                                        , 
+                                                         docopy
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to set an event on the flash movie. The set event call maintains an event cache
+of all the events assigned on the flash movie for a given node. Since there is only one
+flash movie on the page, the setEvent can maintain only a single event per node on the
+flash movie.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">n</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The flash movie Event name. Refer the 
+<a href='http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/Event.html'
+target=_blank>the adobe Action-script 3 flash events manual</a> for all the events that
+can be assigned to the flash movie.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">cb</span>
+                                                        &lt;<span property="yui:type">Function</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The callback function to be called when the flash movie event occurs</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">docopy</span>
+                                                        &lt;<span property="yui:type">Boolean</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The boolean flag to decide whether the event you assign when triggered
+must assign the copy text to the OS clipboard. Default is FALSE</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Boolean
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">TRUE if success, FALSE if failure</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_show">
+                                    <h4>
+                                        <a name="method_show">show</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Void
+                                            <strong property="yui:name">show</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Method to align the flash movie on top of the node so that it can trap the user events
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        Void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div rel="yui:events" resource="#events">
+                        <div class="section method details">
+                            <h3 id="events">Events</h3>
+                            <div class="content">
+                                    <div class="" rel="yui:event" resource="#event_domainChange">
+                                    <h4>
+                                        <a name="event_domainChange">domainChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">domainChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'domain' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_globalChange">
+                                    <h4>
+                                        <a name="event_globalChange">globalChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">globalChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'global' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_idChange">
+                                    <h4>
+                                        <a name="event_idChange">idChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">idChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'id' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_movieloadedChange">
+                                    <h4>
+                                        <a name="event_movieloadedChange">movieloadedChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">movieloadedChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'movieloaded' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_moviepathChange">
+                                    <h4>
+                                        <a name="event_moviepathChange">moviepathChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">moviepathChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'moviepath' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_pageChange">
+                                    <h4>
+                                        <a name="event_pageChange">pageChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">pageChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'page' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div rel="yui:attributes" resource="#configattributes">
+                        <div class="section field details">
+                            <h3 id="configattributes">Configuration Attributes</h3>
+                            <div class="content">
+                                    <div class="" rel="yui:attribute" resource="#config_domain">
+                                    <h4><a name="config_domain">domain</a>
+                                        <code>- <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The domain value that should be allowed in the flash movie
+                                        </div>
+                                    </div>
+ 
+     
+
+                                    <hr />
+                                    </div>        
+                                    <div class="" rel="yui:attribute" resource="#config_global">
+                                    <h4><a name="config_global">global</a>
+                                        <code>- <span property="yui:type">Object</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            If there are custom global name space that the flash callback function has to be called on,
+that can be passed here
+                                        </div>
+                                    </div>
+ 
+     
+
+                                    <hr />
+                                    </div>        
+                                    <div class="" rel="yui:attribute" resource="#config_id">
+                                    <h4><a name="config_id">id</a>
+                                        <code>- <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The identifier for the flash movie
+                                        </div>
+                                    </div>
+ 
+     
+
+                                    <hr />
+                                    </div>        
+                                    <div class="" rel="yui:attribute" resource="#config_movieloaded">
+                                    <h4><a name="config_movieloaded">movieloaded</a>
+                                        <code>- <span property="yui:type">Boolean</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The movieloaded attribute will be set for the given node when the flash movie is ready
+                                        </div>
+                                    </div>
+ 
+     
+
+                                    <hr />
+                                    </div>        
+                                    <div class="" rel="yui:attribute" resource="#config_moviepath">
+                                    <h4><a name="config_moviepath">moviepath</a>
+                                        <code>- <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The path to the swf movie. The movie might be set up on various domain. The movie path
+can be a URL or a file path
+                                        </div>
+                                    </div>
+ 
+     
+
+                                    <hr />
+                                    </div>        
+                                    <div class="" rel="yui:attribute" resource="#config_page">
+                                    <h4><a name="config_page">page</a>
+                                        <code>- <span property="yui:type">Node</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The page attribute represents the topmost node where the flash movie will be embeded only
+once. This is needed so that even if there are multiple copy nodes, we will use only a
+one flash movie
+my default, the page attribute is set to the page body
+                                        </div>
+                                    </div>
+ 
+     
+
+                                    <hr />
+                                    </div>        
+
+                            </div>
+                        </div>
+
+                    </div>
+
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_clipboard-plugin.html" title="clipboard-plugin">clipboard-plugin</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="ClipBoard.html" title="ClipBoard">ClipBoard</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="clipboard.js.html" title="clipboard.js">clipboard.js</a></li>
+                                <li class=""><a href="gallery-clipboard.js.html" title="gallery-clipboard.js">gallery-clipboard.js</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="propertyList" class="module">
+                        <h4>Properties</h4>
+                        <ul class="content">        
+                                <li class="private"><a href="#property_EMBED_TEMPLATE" title="EMBED_TEMPLATE">EMBED_TEMPLATE</a></li>
+                                <li class="private"><a href="#property_OBJECT_TEMPLATE" title="OBJECT_TEMPLATE">OBJECT_TEMPLATE</a></li>
+                                <li class="private"><a href="#property_SWF_MOVIE_NAME" title="SWF_MOVIE_NAME">SWF_MOVIE_NAME</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="methodsList" class="module">
+                        <h4>Methods</h4>
+                        <ul class="content">        
+                                <li class="private"><a href="#method__alignMovie" title="_alignMovie">_alignMovie</a></li>
+                                <li class="private"><a href="#method__destructor" title="_destructor">_destructor</a></li>
+                                <li class="private"><a href="#method__flashInterface" title="_flashInterface">_flashInterface</a></li>
+                                <li class="private"><a href="#method__getFlashMovieObj" title="_getFlashMovieObj">_getFlashMovieObj</a></li>
+                                <li class="private"><a href="#method__getNodeSize" title="_getNodeSize">_getNodeSize</a></li>
+                                <li class=""><a href="#method_copy" title="copy">copy</a></li>
+                                <li class=""><a href="#method_focus" title="focus">focus</a></li>
+                                <li class=""><a href="#method_getHostDimensions" title="getHostDimensions">getHostDimensions</a></li>
+                                <li class=""><a href="#method_hide" title="hide">hide</a></li>
+                                <li class=""><a href="#method_initializer" title="initializer">initializer</a></li>
+                                <li class=""><a href="#method_removeEvent" title="removeEvent">removeEvent</a></li>
+                                <li class="private"><a href="#method_setAttribute" title="setAttribute">setAttribute</a></li>
+                                <li class=""><a href="#method_setEvent" title="setEvent">setEvent</a></li>
+                                <li class=""><a href="#method_show" title="show">show</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="eventsList" class="module">
+                        <h4>Events</h4>
+                        <ul class="content">        
+                                <li class=""><a href="#event_domainChange" title="domainChange">domainChange</a></li>
+                                <li class=""><a href="#event_globalChange" title="globalChange">globalChange</a></li>
+                                <li class=""><a href="#event_idChange" title="idChange">idChange</a></li>
+                                <li class=""><a href="#event_movieloadedChange" title="movieloadedChange">movieloadedChange</a></li>
+                                <li class=""><a href="#event_moviepathChange" title="moviepathChange">moviepathChange</a></li>
+                                <li class=""><a href="#event_pageChange" title="pageChange">pageChange</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="configList" class="module">
+                        <h4>Configuration Attributes</h4>
+                        <ul class="content">        
+                                <li class=""><a href="#config_domain" title="domain">domain</a></li>
+                                <li class=""><a href="#config_global" title="global">global</a></li>
+                                <li class=""><a href="#config_id" title="id">id</a></li>
+                                <li class=""><a href="#config_movieloaded" title="movieloaded">movieloaded</a></li>
+                                <li class=""><a href="#config_moviepath" title="moviepath">moviepath</a></li>
+                                <li class=""><a href="#config_page" title="page">page</a></li>
+                        </ul>
+                    </div>
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2011 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "ClipBoard.html#method__alignMovie", "access": "private", "host": "ClipBoard", "type": "method", "name": "_alignMovie"}, {"url": "ClipBoard.html#method_copy", "access": "", "host": "ClipBoard", "type": "method", "name": "copy"}, {"url": "ClipBoard.html#method__destructor", "access": "private", "host": "ClipBoard", "type": "method", "name": "_destructor"}, {"url": "ClipBoard.html#config_domain", "access": "", "host": "ClipBoard", "type": "config", "name": "domain"}, {"url": "ClipBoard.html#event_domainChange", "access": "", "host": "ClipBoard", "type": "event", "name": "domainChange"}, {"url": "ClipBoard.html#property_EMBED_TEMPLATE", "access": "private", "host": "ClipBoard", "type": "property", "name": "EMBED_TEMPLATE"}, {"url": "ClipBoard.html#method__flashInterface", "access": "private", "host": "ClipBoard", "type": "method", "name": "_flashInterface"}, {"url": "ClipBoard.html#method_focus", "access": "", "host": "ClipBoard", "type": "method", "name": "focus"}, {"url": "ClipBoard.html#method__getFlashMovieObj", "access": "private", "host": "ClipBoard", "type": "method", "name": "_getFlashMovieObj"}, {"url": "ClipBoard.html#method_getHostDimensions", "access": "", "host": "ClipBoard", "type": "method", "name": "getHostDimensions"}, {"url": "ClipBoard.html#method__getNodeSize", "access": "private", "host": "ClipBoard", "type": "method", "name": "_getNodeSize"}, {"url": "ClipBoard.html#config_global", "access": "", "host": "ClipBoard", "type": "config", "name": "global"}, {"url": "ClipBoard.html#event_globalChange", "access": "", "host": "ClipBoard", "type": "event", "name": "globalChange"}, {"url": "ClipBoard.html#method_hide", "access": "", "host": "ClipBoard", "type": "method", "name": "hide"}, {"url": "ClipBoard.html#config_id", "access": "", "host": "ClipBoard", "type": "config", "name": "id"}, {"url": "ClipBoard.html#event_idChange", "access": "", "host": "ClipBoard", "type": "event", "name": "idChange"}, {"url": "ClipBoard.html#method_initializer", "access": "", "host": "ClipBoard", "type": "method", "name": "initializer"}, {"url": "ClipBoard.html#config_movieloaded", "access": "", "host": "ClipBoard", "type": "config", "name": "movieloaded"}, {"url": "ClipBoard.html#event_movieloadedChange", "access": "", "host": "ClipBoard", "type": "event", "name": "movieloadedChange"}, {"url": "ClipBoard.html#config_moviepath", "access": "", "host": "ClipBoard", "type": "config", "name": "moviepath"}, {"url": "ClipBoard.html#event_moviepathChange", "access": "", "host": "ClipBoard", "type": "event", "name": "moviepathChange"}, {"url": "ClipBoard.html#property_OBJECT_TEMPLATE", "access": "private", "host": "ClipBoard", "type": "property", "name": "OBJECT_TEMPLATE"}, {"url": "ClipBoard.html#config_page", "access": "", "host": "ClipBoard", "type": "config", "name": "page"}, {"url": "ClipBoard.html#event_pageChange", "access": "", "host": "ClipBoard", "type": "event", "name": "pageChange"}, {"url": "ClipBoard.html#method_removeEvent", "access": "", "host": "ClipBoard", "type": "method", "name": "removeEvent"}, {"url": "ClipBoard.html#method_setAttribute", "access": "private", "host": "ClipBoard", "type": "method", "name": "setAttribute"}, {"url": "ClipBoard.html#method_setEvent", "access": "", "host": "ClipBoard", "type": "method", "name": "setEvent"}, {"url": "ClipBoard.html#method_show", "access": "", "host": "ClipBoard", "type": "method", "name": "show"}, {"url": "ClipBoard.html#property_SWF_MOVIE_NAME", "access": "private", "host": "ClipBoard", "type": "property", "name": "SWF_MOVIE_NAME"}];
+</script>
+</body>
+</html>

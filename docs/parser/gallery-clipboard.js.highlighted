@@ -1,0 +1,523 @@
+<div class="highlight"><pre><span class="nx">YUI</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;gallery-clipboard&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Y</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="cm">/*</span>
+<span class="cm"> Copyright (c) 2011, Yahoo! Inc.</span>
+<span class="cm">All rights reserved.</span>
+
+<span class="cm">Redistribution and use of this software in source and binary forms, </span>
+<span class="cm">with or without modification, are permitted provided that the following </span>
+<span class="cm">conditions are met:</span>
+
+<span class="cm">* Redistributions of source code must retain the above</span>
+<span class="cm">  copyright notice, this list of conditions and the</span>
+<span class="cm">  following disclaimer.</span>
+
+<span class="cm">* Redistributions in binary form must reproduce the above</span>
+<span class="cm">  copyright notice, this list of conditions and the</span>
+<span class="cm">  following disclaimer in the documentation and/or other</span>
+<span class="cm">  materials provided with the distribution.</span>
+
+<span class="cm">* Neither the name of Yahoo! Inc. nor the names of its</span>
+<span class="cm">  contributors may be used to endorse or promote products</span>
+<span class="cm">  derived from this software without specific prior</span>
+<span class="cm">  written permission of Yahoo! Inc.</span>
+
+<span class="cm">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS </span>
+<span class="cm">IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED </span>
+<span class="cm">TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A </span>
+<span class="cm">PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT </span>
+<span class="cm">OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, </span>
+<span class="cm">SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT </span>
+<span class="cm">LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, </span>
+<span class="cm">DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY </span>
+<span class="cm">THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT </span>
+<span class="cm">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE </span>
+<span class="cm">OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
+<span class="cm">*/</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The ClipBoard class is desinged to be a node plugin and a wrapper over the flash movie</span>
+<span class="cm">     * to copy text contents to the OS clipboard. The class will place the flash movie below the given</span>
+<span class="cm">     * node so that a user action can trigger the copy of contents to the OS clip board using</span>
+<span class="cm">     * Flash&#39;s System.setClipboard method. Starting from flash 10, the clipboard can be set only</span>
+<span class="cm">     * off a user initiated event. So the JS class shall only set the string to be copied and will</span>
+<span class="cm">     * allow the flash movie&#39;s event to capture the user action and set the clipboard contents</span>
+<span class="cm">     * @class ClipBoard</span>
+<span class="cm">     * @constructor</span>
+<span class="cm">     * @extends Y.Plugin.Base</span>
+<span class="cm">     */</span>
+    <span class="kd">function</span> <span class="nx">ClipBoard</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="cm">/**</span>
+<span class="cm">     * Template for embedding the flash movie in the object tag. Mainly for IE browsers</span>
+<span class="cm">     * @property OBJECT_TEMPLATE</span>
+<span class="cm">     * @static</span>
+<span class="cm">     * @type String</span>
+<span class="cm">     * @private</span>
+<span class="cm">     */</span>
+    <span class="kd">var</span> <span class="nx">OBJECT_TEMPLATE</span>     <span class="o">=</span> <span class="s1">&#39;&lt;object classid=&quot;clsid:d27cdb6e-ae6d-11cf-96b8-444553540000&quot;&#39;</span><span class="o">+</span>
+                        <span class="s1">&#39; codebase=&quot;{__PROTOCOL__}download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;width=&quot;{__WIDTH__}&quot; height=&quot;{__HEIGHT__}&quot; id=&quot;{__MOVIEID__}&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;align=&quot;middle&quot;&gt;&lt;param name=&quot;allowScriptAccess&quot; value=&quot;always&quot; embed-type=&quot;menu&quot;/&gt;&#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;&lt;param name=&quot;allowFullScreen&quot; value=&quot;false&quot; /&gt;&#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;&lt;param name=&quot;movie&quot; value=&quot;{__MOVIEPATH__}&quot; /&gt;&#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;&lt;param name=&quot;loop&quot; value=&quot;false&quot; /&gt;&lt;param name=&quot;menu&quot; value=&quot;false&quot; /&gt;&#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;&lt;param name=&quot;quality&quot; value=&quot;best&quot; /&gt;&lt;param name=&quot;bgcolor&quot; value=&quot;#ffffff&quot; /&gt;&#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;&lt;param name=&quot;flashvars&quot; value=&quot;{__FLASHVARS__}&quot;/&gt;&lt;param name=&quot;wmode&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;value=&quot;transparent&quot;/&gt;&lt;/object&gt;&#39;</span><span class="p">,</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Template for embedding the flash movie in the embed tag. For most other browsers</span>
+<span class="cm">     * @property EMBED_TEMPLATE</span>
+<span class="cm">     * @static</span>
+<span class="cm">     * @type String</span>
+<span class="cm">     * @private</span>
+<span class="cm">     */</span>
+        <span class="nx">EMBED_TEMPLATE</span>      <span class="o">=</span> <span class="s1">&#39;&lt;embed id=&quot;{__MOVIEID__}&quot; src=&quot;{__MOVIEPATH__}&quot; loop=&quot;false&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;menu=&quot;false&quot; quality=&quot;best&quot; bgcolor=&quot;#ffffff&quot; width=&quot;{__WIDTH__}&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;height=&quot;{__HEIGHT__}&quot; name=&quot;{__MOVIEID__}&quot; align=&quot;middle&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;allowScriptAccess=&quot;always&quot; allowFullScreen=&quot;false&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;type=&quot;application/x-shockwave-flash&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;pluginspage=&quot;http://www.macromedia.com/go/getflashplayer&quot; &#39;</span><span class="o">+</span>
+                        <span class="s1">&#39;flashvars=&quot;{__FLASHVARS__}&quot; wmode=&quot;transparent&quot; embed-type=&quot;menu&quot; /&gt;&#39;</span><span class="p">,</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Name of the flash movie</span>
+<span class="cm">     * @property SWF_MOVIE_NAME</span>
+<span class="cm">     * @private</span>
+<span class="cm">     * @static</span>
+<span class="cm">     * @type String</span>
+<span class="cm">     */</span>
+        <span class="nx">SWF_MOVIE_NAME</span>     <span class="o">=</span> <span class="s2">&quot;ClipBoardCopy.swf&quot;</span><span class="p">,</span>
+        <span class="nx">COMPONENT_NAME</span>     <span class="o">=</span> <span class="s2">&quot;clipboard&quot;</span><span class="p">,</span>
+        <span class="nx">COMPONENT_NS</span>       <span class="o">=</span> <span class="s2">&quot;cp&quot;</span><span class="p">,</span>
+        <span class="nx">DEFAULT_GLOBAL</span>     <span class="o">=</span> <span class="nb">window</span><span class="p">,</span>
+        <span class="nx">GLOBAL_HANDLER</span>     <span class="o">=</span> <span class="s2">&quot;ClipboardInterfaceFn&quot;</span><span class="p">,</span>
+        <span class="nx">PROTOCOL</span>           <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^https/i</span><span class="p">)</span> <span class="o">?</span> <span class="s1">&#39;https://&#39;</span> <span class="o">:</span> <span class="s1">&#39;http://&#39;</span><span class="p">,</span>
+        <span class="nx">FLASHVARS_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;id={__MOVIEID__}&amp;ns={__NS__}&amp;width={__WIDTH__}&amp;height={__HEIGHT__}&quot;</span><span class="o">+</span>
+                             <span class="s2">&quot;&amp;fn={__FN__}&amp;domain={__DOMAIN__}&quot;</span><span class="p">,</span>
+        <span class="nx">OFFSCREEN_LEFT</span>     <span class="o">=</span> <span class="s2">&quot;-2000px&quot;</span><span class="p">,</span>
+        <span class="nx">FLASHMOVIE_LOADED</span>  <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="cm">/* Helpers */</span>
+        <span class="nx">flashEventCache</span>    <span class="o">=</span> <span class="p">{},</span>
+        <span class="nx">loadObj</span>            <span class="o">=</span> <span class="p">{},</span>
+        <span class="nx">isEmpty</span>            <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="o">||</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>
+                <span class="k">return</span> <span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">?</span><span class="kc">true</span><span class="o">:</span><span class="kc">false</span><span class="p">;</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">isUndefined</span>        <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">,</span>
+        <span class="nx">isNull</span>             <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isNull</span><span class="p">,</span>
+        <span class="nx">isNumber</span>           <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">,</span>
+        <span class="nx">isString</span>           <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span><span class="p">,</span>
+        <span class="nx">canBeRemoved</span>       <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="nx">flashEventCache</span><span class="p">;</span>
+            <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">id</span> <span class="k">in</span> <span class="nx">cache</span><span class="p">)</span>
+                <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">ev</span> <span class="k">in</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">])</span> <span class="p">{</span>
+                    
+                    <span class="k">if</span><span class="p">(</span><span class="nx">ev</span> <span class="o">===</span> <span class="nx">e</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">unsetCache</span>        <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">ev</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="nx">flashEventCache</span><span class="p">[</span><span class="nx">id</span><span class="p">][</span><span class="nx">ev</span><span class="p">];</span>
+        <span class="p">};</span>
+    
+    <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">NAME</span> <span class="o">=</span> <span class="nx">COMPONENT_NAME</span><span class="p">;</span>
+    <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">NS</span>   <span class="o">=</span> <span class="nx">COMPONENT_NAME</span><span class="p">;</span>
+ 
+    <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">ATTRS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The page attribute represents the topmost node where the flash movie will be embeded only</span>
+<span class="cm">         * once. This is needed so that even if there are multiple copy nodes, we will use only a</span>
+<span class="cm">         * one flash movie</span>
+<span class="cm">         * my default, the page attribute is set to the page body</span>
+<span class="cm">         * @attribute page</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">page</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span> <span class="o">:</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The identifier for the flash movie</span>
+<span class="cm">         * @attribute id</span>
+<span class="cm">         * @type String</span>
+<span class="cm">         */</span>
+        <span class="nx">id</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The path to the swf movie. The movie might be set up on various domain. The movie path</span>
+<span class="cm">         * can be a URL or a file path</span>
+<span class="cm">         * @attribute moviepath</span>
+<span class="cm">         * @type String</span>
+<span class="cm">         */</span>
+        <span class="nx">moviepath</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * If there are custom global name space that the flash callback function has to be called on,</span>
+<span class="cm">         * that can be passed here</span>
+<span class="cm">         * @attribute global</span>
+<span class="cm">         * @type Object</span>
+<span class="cm">         */</span>
+        <span class="nx">global</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span> <span class="o">:</span> <span class="nx">DEFAULT_GLOBAL</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The domain value that should be allowed in the flash movie</span>
+<span class="cm">         * @attribute domain</span>
+<span class="cm">         * @type String</span>
+<span class="cm">         */</span>
+        <span class="nx">domain</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span> <span class="o">:</span> <span class="s2">&quot;*.yahoo.com&quot;</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The movieloaded attribute will be set for the given node when the flash movie is ready</span>
+<span class="cm">         * @attribute movieloaded</span>
+<span class="cm">         * @type Boolean</span>
+<span class="cm">         */</span>
+        <span class="nx">movieloaded</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span> <span class="o">:</span> <span class="kc">false</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+ 
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">ClipBoard</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Plugin</span><span class="p">.</span><span class="nx">Base</span><span class="p">,</span> <span class="p">{</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Initializer function to set up the flash movie if not already present on the &quot;page&quot;,</span>
+<span class="cm">         * setup the flash - js interface, and align the movie to the host node</span>
+<span class="cm">         * @method initializer</span>
+<span class="cm">         * @param config {Object} the configuration attributes</span>
+<span class="cm">         * @return {Void}</span>
+<span class="cm">         */</span>
+        <span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span>  <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+                <span class="nx">global</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">),</span>
+                <span class="nx">fn</span>     <span class="o">=</span> <span class="nx">GLOBAL_HANDLER</span><span class="p">,</span>
+                <span class="nx">dimen</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">isEmpty</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)))</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="nx">Y</span><span class="p">.</span><span class="nx">guid</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="p">));</span>
+            
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span>       <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">);</span>
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">_movie</span>      <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            
+            <span class="k">if</span><span class="p">(</span><span class="nx">isEmpty</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)))</span>
+                <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">));</span>
+            <span class="k">else</span>
+                <span class="nx">_this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">));</span>
+                
+            <span class="nx">dimen</span>  <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">getHostDimensions</span><span class="p">();</span>
+            
+            <span class="k">if</span><span class="p">(</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">global</span><span class="p">[</span><span class="nx">fn</span><span class="p">]))</span>
+                <span class="nx">global</span><span class="p">[</span><span class="nx">fn</span><span class="p">]</span>  <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_flashInterface</span><span class="p">;</span>
+            
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">emitFacade</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="nx">preventable</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="nx">context</span>     <span class="o">:</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">,</span>
+                <span class="nx">bubbles</span>     <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="nx">fireOnce</span>    <span class="o">:</span> <span class="kc">true</span>
+            <span class="p">});</span>
+            
+            <span class="nx">Y</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">FLASHMOVIE_LOADED</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                <span class="nx">loadObj</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="nx">a</span><span class="p">;</span>
+                <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="nx">a</span><span class="p">);</span>
+                <span class="nx">_this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;movieloaded&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">_movie</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_getFlashMovieObj</span><span class="p">(</span><span class="nx">dimen</span><span class="p">,</span> <span class="nx">fn</span><span class="p">);</span>
+            
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">_alignMovie</span><span class="p">(</span><span class="nx">dimen</span><span class="p">,</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">);</span>
+        
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+            <span class="cm">/**</span>
+<span class="cm">             * The setAttribute method is trapped by the plugin and if the value set is copy, then we</span>
+<span class="cm">             * show the flash movie and then set the value to be copied. Now, when the user will</span>
+<span class="cm">             * initiate the event on the flash movie, we will set the contents of the keyboard</span>
+<span class="cm">             * @method setAttribute</span>
+<span class="cm">             * @private</span>
+<span class="cm">             * @param type {String} The type of attribute to be set</span>
+<span class="cm">             * @param value {String} The attribute value to be set</span>
+<span class="cm">             */</span>
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">beforeHostMethod</span><span class="p">(</span><span class="s2">&quot;setAttribute&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="nx">type</span> <span class="o">===</span> <span class="s2">&quot;copy&quot;</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">_this</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+                    <span class="nx">_this</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+                    <span class="nx">_this</span><span class="p">.</span><span class="nx">focus</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            <span class="cm">/* we hook on to the host &quot;on&quot; method so that we can fire the clipboard:load event</span>
+<span class="cm">              only when the user requests for it . This is a hack needed because the flash movie</span>
+<span class="cm">              will fire the load event only once for the entire lifecycle of the page*/</span>
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">afterHostMethod</span><span class="p">(</span><span class="s2">&quot;on&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ev</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">ev</span> <span class="o">===</span> <span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:load&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">FLASHMOVIE_LOADED</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="nx">loadObj</span><span class="p">.</span><span class="nx">params</span><span class="p">);</span>
+                    <span class="nx">_this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;movieloaded&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            
+            <span class="cm">/* @TODO look at over-writing the &#39;on&#39; and &#39;detach&#39; methods for &quot;clipboar:&quot; namespaced</span>
+<span class="cm">              events */</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Destructor method to clean up the flash movie clipboard</span>
+<span class="cm">         * @TODO Not calling this destructor because its a node plugin and every time the node is destroyed</span>
+<span class="cm">         * it will destroy the clipboard, need to check this further </span>
+<span class="cm">         * @method _destructor</span>
+<span class="cm">         * @private</span>
+<span class="cm">         */</span>
+        <span class="nx">_destructor</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;boundingBox&quot;</span><span class="p">).</span><span class="nx">destroy</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+            <span class="nx">FLASHMOVIE_LOADED</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="nx">loadObj</span> <span class="o">=</span> <span class="p">{};</span>
+            <span class="nx">flashEventCache</span> <span class="o">=</span> <span class="p">{};</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to get the dimensions of the host node so that the flash movie can be</span>
+<span class="cm">         * painted across the node.</span>
+<span class="cm">         * @method getHostDimensions</span>
+<span class="cm">         * @return {Object} { w : width, h : height, xy : NodeXY}</span>
+<span class="cm">         */</span>
+        <span class="nx">getHostDimensions</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span>  <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+                <span class="nx">host</span>   <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">,</span>
+                <span class="nx">wh</span>     <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_getNodeSize</span><span class="p">(</span><span class="nx">host</span><span class="p">);</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="nx">w</span>  <span class="o">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">wh</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">),</span>
+                <span class="nx">h</span>  <span class="o">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">wh</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">10</span><span class="p">),</span>
+                <span class="nx">xy</span> <span class="o">:</span> <span class="nx">host</span><span class="p">.</span><span class="nx">getXY</span><span class="p">()</span>
+            <span class="p">};</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to align the flash movie on top of the node so that it can trap the user events</span>
+<span class="cm">         * @method show</span>
+<span class="cm">         * @return {Void}</span>
+<span class="cm">         */</span>
+        <span class="nx">show</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+            <span class="nx">_this</span><span class="p">.</span><span class="nx">_alignMovie</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">getHostDimensions</span><span class="p">());</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Alias method to the flash movie focus method</span>
+<span class="cm">         * @method focus</span>
+<span class="cm">         * @return {Void}</span>
+<span class="cm">         */</span>
+        <span class="nx">focus</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_movie</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">focus</span><span class="p">)</span> <span class="nx">m</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to hide the flash movie once the copy has been done</span>
+<span class="cm">         * @method hide</span>
+<span class="cm">         * @return {Void}</span>
+<span class="cm">         */</span>
+        <span class="nx">hide</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+                <span class="nx">mb</span>    <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;boundingBox&quot;</span><span class="p">);</span>
+            <span class="nx">mb</span><span class="p">.</span><span class="nx">setStyles</span><span class="p">({</span> <span class="s2">&quot;left&quot;</span> <span class="o">:</span> <span class="nx">OFFSCREEN_LEFT</span> <span class="p">});</span>
+            
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to set the copy string into to movie. This method has to be called before the</span>
+<span class="cm">         * flash movie accepts the event to set the copy string to clip board. This method can</span>
+<span class="cm">         * also be called by using node.setAttribute(&quot;copy&quot;, &quot;this is a string&quot; );</span>
+<span class="cm">         * @method copy</span>
+<span class="cm">         * @param str {String} the string to be copied</span>
+<span class="cm">         */</span>
+        <span class="nx">copy</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="nx">_this</span><span class="p">.</span><span class="nx">_movie</span><span class="p">.</span><span class="nx">_node</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">));</span>
+            <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Y</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:error&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to set an event on the flash movie. The set event call maintains an event cache</span>
+<span class="cm">         * of all the events assigned on the flash movie for a given node. Since there is only one</span>
+<span class="cm">         * flash movie on the page, the setEvent can maintain only a single event per node on the</span>
+<span class="cm">         * flash movie.</span>
+<span class="cm">         * @method setEvent</span>
+<span class="cm">         * @param n {String} The flash movie Event name. Refer the </span>
+<span class="cm">         * &lt;a href=&#39;http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/Event.html&#39;</span>
+<span class="cm">         * target=_blank&gt;the adobe Action-script 3 flash events manual&lt;/a&gt; for all the events that</span>
+<span class="cm">         * can be assigned to the flash movie.</span>
+<span class="cm">         * @param cb {Function} The callback function to be called when the flash movie event occurs</span>
+<span class="cm">         * @param docopy {Boolean} The boolean flag to decide whether the event you assign when triggered</span>
+<span class="cm">         * must assign the copy text to the OS clipboard. Default is FALSE</span>
+<span class="cm">         * @return {Boolean} TRUE if success, FALSE if failure</span>
+<span class="cm">         */</span>
+        <span class="nx">setEvent</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">cb</span><span class="p">,</span> <span class="nx">docopy</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+                    <span class="nx">movie</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_movie</span><span class="p">.</span><span class="nx">_node</span><span class="p">,</span>
+                    <span class="nx">cache</span> <span class="o">=</span> <span class="nx">flashEventCache</span><span class="p">,</span>
+                    <span class="nx">obj</span>   <span class="o">=</span> <span class="p">{},</span>
+                    <span class="nx">id</span>    <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">);</span>
+                <span class="k">if</span><span class="p">(</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">]))</span>
+                    <span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+                <span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">][</span><span class="nx">n</span><span class="p">]</span> <span class="o">=</span> <span class="nx">cb</span><span class="p">;</span>
+                <span class="nx">obj</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;docopy&quot;</span> <span class="o">:</span> <span class="nx">docopy</span><span class="o">?</span><span class="kc">true</span><span class="o">:</span><span class="kc">false</span><span class="p">};</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">setupEvents</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">movie</span><span class="p">.</span><span class="nx">setupEvents</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Y</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:error&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">});</span>
+            <span class="p">}</span>
+            
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to remove the event on the flash movie. This method will makes sure that the</span>
+<span class="cm">         * event is removed only if all the node instances using the flash movie are free of any</span>
+<span class="cm">         * events binding. If there are any nodes that are listening to the flash movie event, then</span>
+<span class="cm">         * till a remove event for that node is called, the events will not be removed from the</span>
+<span class="cm">         * flash movie</span>
+<span class="cm">         * @method removeEvent</span>
+<span class="cm">         * @param n {String} The name of the event</span>
+<span class="cm">         * @return {Boolean} TRUE if success, FALSE if failure</span>
+<span class="cm">         */</span>
+        <span class="nx">removeEvent</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="nx">flashEventCache</span><span class="p">,</span>
+                    <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span><span class="nx">rm</span> <span class="o">=</span> <span class="p">[],</span>
+                    <span class="nx">movie</span> <span class="o">=</span>  <span class="nx">_this</span><span class="p">.</span><span class="nx">_movie</span><span class="p">.</span><span class="nx">_node</span><span class="p">;</span>
+                <span class="k">if</span><span class="p">(</span><span class="nx">isString</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="nx">n</span> <span class="o">=</span> <span class="p">[</span><span class="nx">n</span><span class="p">];</span>
+                <span class="p">}</span>
+                <span class="k">for</span><span class="p">(</span><span class="nx">l</span><span class="o">=</span><span class="nx">n</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">unsetCache</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">n</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+                    <span class="k">if</span><span class="p">(</span><span class="nx">canBeRemoved</span><span class="p">(</span><span class="nx">n</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+                        <span class="nx">rm</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">n</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nx">rm</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">removeEvents</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">movie</span><span class="p">.</span><span class="nx">removeEvents</span><span class="p">(</span><span class="nx">rm</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Y</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:error&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">});</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to align the movie to the given host with the specified dimensions</span>
+<span class="cm">         * @method _alignMovie</span>
+<span class="cm">         * @param d {Object} The dimensions object got from getHostDimensions</span>
+<span class="cm">         * @param h {Node} The host node</span>
+<span class="cm">         * @return {Node} The bounding box node</span>
+<span class="cm">         * @private</span>
+<span class="cm">         */</span>
+        <span class="nx">_alignMovie</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">h</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+                <span class="nx">host</span>  <span class="o">=</span> <span class="nx">isUndefined</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span><span class="o">?</span><span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="o">:</span><span class="nx">h</span><span class="p">,</span>
+                <span class="nx">mb</span>    <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;boundingBox&quot;</span><span class="p">),</span>
+                <span class="nx">zin</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="nx">hzin</span>  <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">host</span><span class="p">.</span><span class="nx">getStyle</span><span class="p">(</span><span class="s2">&quot;zIndex&quot;</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span> <span class="cm">/* host z-index  */</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">hzin</span><span class="p">))</span>
+                <span class="nx">zin</span> <span class="o">=</span> <span class="nx">hzin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="nx">mb</span><span class="p">.</span><span class="nx">setXY</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">xy</span><span class="p">);</span>
+            <span class="nx">mb</span><span class="p">.</span><span class="nx">setStyles</span><span class="p">({</span><span class="nx">zIndex</span> <span class="o">:</span> <span class="nx">zin</span><span class="p">});</span>
+            
+            <span class="k">return</span> <span class="nx">mb</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Method to create the flash object markup, create the Object or Embed element and append it</span>
+<span class="cm">         * to the &quot;page&quot;</span>
+<span class="cm">         * @method _getFlashMovieObj</span>
+<span class="cm">         * @param d {Object} The dimensions object got from getHostDimensions</span>
+<span class="cm">         * @param f {String} The global call back function name</span>
+<span class="cm">         * @private</span>
+<span class="cm">         */</span>
+        <span class="nx">_getFlashMovieObj</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+                <span class="nx">id</span>    <span class="o">=</span> <span class="nx">COMPONENT_NAME</span><span class="p">,</span>
+                <span class="nx">rep</span>   <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;__PROTOCOL__&quot;</span> <span class="o">:</span> <span class="nx">PROTOCOL</span><span class="p">,</span>
+                <span class="s2">&quot;__MOVIEID__&quot;</span>  <span class="o">:</span> <span class="nx">id</span><span class="p">,</span>
+                <span class="s2">&quot;__WIDTH__&quot;</span>    <span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">w</span><span class="p">,</span>
+                <span class="s2">&quot;__HEIGHT__&quot;</span>   <span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">h</span><span class="p">,</span>
+                <span class="s2">&quot;__MOVIEPATH__&quot;</span><span class="o">:</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;moviepath&quot;</span><span class="p">)</span><span class="o">+</span><span class="nx">SWF_MOVIE_NAME</span><span class="p">,</span>
+                <span class="s2">&quot;__NS__&quot;</span>       <span class="o">:</span> <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">NS</span><span class="p">,</span>
+                <span class="s2">&quot;__FN__&quot;</span>       <span class="o">:</span> <span class="nx">f</span><span class="p">,</span>
+                <span class="s2">&quot;__DOMAIN__&quot;</span>   <span class="o">:</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;domain&quot;</span><span class="p">)</span>
+            <span class="p">},</span>
+            <span class="nx">template</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">UA</span><span class="p">.</span><span class="nx">ie</span><span class="o">?</span><span class="nx">OBJECT_TEMPLATE</span><span class="o">:</span><span class="nx">EMBED_TEMPLATE</span><span class="p">,</span>
+            <span class="nx">page</span>     <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">),</span>
+            <span class="nx">movie</span>    <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">).</span><span class="nx">one</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="o">+</span><span class="nx">id</span><span class="p">),</span>
+            <span class="nx">wrapper</span><span class="p">;</span>
+            
+            <span class="nx">rep</span><span class="p">[</span><span class="s2">&quot;__FLASHVARS__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">substitute</span><span class="p">(</span><span class="nx">FLASHVARS_TEMPLATE</span><span class="p">,</span> <span class="nx">rep</span><span class="p">);</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="nx">isNull</span><span class="p">(</span><span class="nx">movie</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;&lt;div&gt;&lt;/div&gt;&quot;</span><span class="p">);</span>
+                <span class="nx">wrapper</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;innerHTML&quot;</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">substitute</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">rep</span><span class="p">));</span>
+                <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setStyles</span><span class="p">({</span><span class="s2">&quot;width&quot;</span> <span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">w</span><span class="p">,</span> <span class="nx">height</span><span class="o">:</span><span class="nx">d</span><span class="p">.</span><span class="nx">h</span><span class="p">,</span> <span class="nx">position</span><span class="o">:</span><span class="s2">&quot;absolute&quot;</span><span class="p">});</span>
+                <span class="nx">wrapper</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;className&quot;</span><span class="p">,</span> <span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;-wrapper&quot;</span><span class="p">);</span>
+                <span class="nx">page</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">);</span>
+                <span class="nx">movie</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">).</span><span class="nx">one</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="o">+</span><span class="nx">id</span><span class="p">);</span>
+                <span class="nx">loadObj</span><span class="p">.</span><span class="nx">host</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;boundingBox&quot;</span><span class="p">,</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;parentNode&quot;</span><span class="p">));</span>
+            <span class="nx">movie</span><span class="p">.</span><span class="nx">setStyle</span><span class="p">(</span><span class="s2">&quot;outline&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">movie</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The main method that is set on the &quot;global&quot; that will be the callback interface between</span>
+<span class="cm">         * the flash movie and javascript. All the flash movie events that are trapped and are of</span>
+<span class="cm">         * interest will be passed into the falsh interface. Based on the type of event, the</span>
+<span class="cm">         * method will dispatch the event to the most suitable node or handler</span>
+<span class="cm">         * @method _flashInterface</span>
+<span class="cm">         * @param ev {String} The event String</span>
+<span class="cm">         * @param a {Object} The flash call back object</span>
+<span class="cm">         * @return {Void}</span>
+<span class="cm">         * @private</span>
+<span class="cm">         */</span>
+        <span class="nx">_flashInterface</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ev</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">tr</span><span class="p">,</span> <span class="nx">node</span><span class="p">,</span>
+                    <span class="nx">cache</span> <span class="o">=</span> <span class="nx">flashEventCache</span><span class="p">;</span>
+                <span class="k">if</span><span class="p">(</span><span class="nx">ev</span> <span class="o">==</span> <span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:event&quot;</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">tr</span>   <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">transaction</span><span class="p">,</span>
+                    <span class="nx">node</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="o">+</span><span class="nx">tr</span><span class="p">);</span>
+                    <span class="k">if</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">tr</span><span class="p">][</span><span class="nx">a</span><span class="p">.</span><span class="nx">event</span><span class="p">])</span>
+                        <span class="nx">cache</span><span class="p">[</span><span class="nx">tr</span><span class="p">][</span><span class="nx">a</span><span class="p">.</span><span class="nx">event</span><span class="p">].</span><span class="nx">call</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">a</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">Y</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">ev</span><span class="p">,</span> <span class="nx">a</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Y</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:error&quot;</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">mix</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">},</span> <span class="nx">a</span><span class="p">));</span>
+            <span class="p">}</span>
+            
+            
+        <span class="p">},</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Return the size of the given node including border, padding and margin.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method _getNodeSize</span>
+<span class="cm">         * @param {Node} node The node for which the size needs to be computed</span>
+<span class="cm">         * @private</span>
+<span class="cm">         */</span>
+        <span class="nx">_getNodeSize</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">sz</span> <span class="o">=</span> <span class="p">[],</span>
+                <span class="nx">gc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ppt</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">getComputedStyle</span><span class="p">(</span><span class="nx">ppt</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+                <span class="p">};</span>
+            <span class="nx">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;marginLeft&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;paddingLeft&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;borderLeftWidth&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;borderRightWidth&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;paddingRight&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;marginRight&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">);</span>
+            <span class="nx">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;marginTop&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;paddingTop&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;borderTopWidth&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;borderBottomWidth&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;paddingBottom&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nx">gc</span><span class="p">(</span><span class="s2">&quot;marginBottom&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">sz</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">ClipBoard</span> <span class="o">=</span> <span class="nx">ClipBoard</span><span class="p">;</span>
+
+
+<span class="p">},</span> <span class="s1">&#39;@VERSION@&#39;</span> <span class="p">,{</span><span class="nx">skinnable</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">requires</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;plugin&#39;</span><span class="p">,</span> <span class="s1">&#39;substitute&#39;</span><span class="p">]});</span>
+</pre></div>
