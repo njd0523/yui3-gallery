@@ -48,14 +48,20 @@
     <div class='container'>
         <h1 id='title'>Flash clipboard copy demo</h1>
         <cite>This demo showcases the ability to create a YUI node and plugin the flash based
-        copy to clipboard functionality. The clipboard copy is implemented as a node plugin</cite>
+        copy to clipboard functionality. The clipboard copy is implemented as a node plugin.
+        The clipboard support allows for attaching any event on the flash movie, so you can setup
+        the node to copy the string even on keydown or 'enter'. 'enter' is a custom event created inside
+        the falsh movie, so from JS you can setup to happen on 'enter'</cite>
         <hr>
         <div class='button b1'>Some content 1</div>
+        <h2>Focus on the node and hit enter to copy the string</h2>
         <div class='button b2'>Some content 2</div>
+        <h2>Focus on the node and click to copy the string</h2>
+        <h2></h2>
     </div>
     <div class='control'>
-        <input type='button' class='keyUp' node = 'b1' value='Node1 add Flash Enter event' />
-        <input type='button' class='remove-keyUp' node = 'b1' value='Node1 remove Flash Enter event' />
+        <!-- input type='button' class='keyUp' node = 'b1' value='Node1 add Flash Enter event' />
+        <input type='button' class='remove-keyUp' node = 'b1' value='Node1 remove Flash Enter event' /-->
         
         <input type='button' class='mouseOver' node = 'b1' value='Node1 add Flash MouseOver' />
         <input type='button' class='remove-mouseOver' node = 'b1' value='Node1 remove Flash MouseOver' />
