@@ -100,10 +100,10 @@
             logit("Flash Movie Loaded for :"+e.currentTarget.get("className"));
             this.on("mouseover", function(ev) {
                 this.setAttribute("copy", this.get("innerHTML"));
-                logit("String set for copy " + this.getAttribute("copy"));
+                logit("Press Enter to copy &quot;" + this.getAttribute("copy")+ "&quot;");
             });
             this.clipboard.setEvent("enter", function(ev) {
-                logit("Clipboard set for : "+this.get("className")+":'"+ev.clipboard+"'");
+                logit("Clipboard now contains - " "+this.get("className")+":'"+ev.clipboard+"'");
                 this.clipboard.hide();
             }, true);
         });
@@ -118,11 +118,11 @@
             logit("Flash Movie Loaded for :"+e.currentTarget.get("className"));
             this.on("mouseover", function(ev) {
                 this.setAttribute("copy", this.get("innerHTML"));
-                logit("String set for copy " + this.getAttribute("copy"));
+                logit("Click to copy &quot;" + this.getAttribute("copy")+"&quot;");
             });
             this.clipboard.setEvent("click", function(ev) {
                 this.clipboard.hide();
-                logit("Clipboard set for : "+this.get("className")+":'"+ev.clipboard+"'");
+                logit("Clipboard now contains - "+this.get("className")+":'"+ev.clipboard+"'");
             }, true);
         });
         
