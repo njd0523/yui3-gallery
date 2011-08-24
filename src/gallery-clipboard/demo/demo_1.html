@@ -103,7 +103,7 @@
                 logit("Press Enter to copy &quot;" + this.getAttribute("copy")+ "&quot;");
             });
             this.clipboard.setEvent("enter", function(ev) {
-                logit("Clipboard now contains - "+this.get("className")+":'"+ev.clipboard+"'");
+                logit("Clipboard now contains - '"+ev.clipboard+"'");
                 this.clipboard.hide();
             }, true);
         });
@@ -122,7 +122,7 @@
             });
             this.clipboard.setEvent("click", function(ev) {
                 this.clipboard.hide();
-                logit("Clipboard now contains - "+this.get("className")+":'"+ev.clipboard+"'");
+                logit("Clipboard now contains - '"+ev.clipboard+"'");
             }, true);
         });
         
