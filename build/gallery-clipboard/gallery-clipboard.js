@@ -519,4 +519,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     Y.ClipBoard = ClipBoard;
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{skinnable:false, requires:['node', 'plugin', 'substitute']});
+=======
+}, 'gallery-2011.08.24-23-44' ,{requires:['node', 'plugin', 'substitute'], skinnable:false});
+>>>>>>> upstream/master
