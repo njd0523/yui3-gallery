@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>API: clipboard-plugin   gallery-clipboard.js  (YUI Library)</title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1314227630.89" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1314227630.89" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1315613035.8" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1315613035.8" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1314227630.89"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1314227630.89"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1315613035.8"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1315613035.8"></script>
 </head>
 
 <body id="yahoo-com">
@@ -138,10 +138,10 @@
 <span class="cm">     * @static</span>
 <span class="cm">     * @type String</span>
 <span class="cm">     */</span>
-        <span class="nx">SWF_MOVIE_NAME</span>     <span class="o">=</span> <span class="s2">&quot;ClipBoardCopy.swf&quot;</span><span class="p">,</span>
+        <span class="nx">SWF_MOVIE_NAME</span>     <span class="o">=</span> <span class="s2">&quot;ClipBoardCopy.swf?r=1&quot;</span><span class="p">,</span>
         <span class="nx">COMPONENT_NAME</span>     <span class="o">=</span> <span class="s2">&quot;clipboard&quot;</span><span class="p">,</span>
         <span class="nx">COMPONENT_NS</span>       <span class="o">=</span> <span class="s2">&quot;cp&quot;</span><span class="p">,</span>
-        <span class="nx">DEFAULT_GLOBAL</span>     <span class="o">=</span> <span class="nb">window</span><span class="p">,</span>
+        <span class="nx">CALLBACK_GLOBAL</span>    <span class="o">=</span> <span class="p">{</span> <span class="nx">obj</span> <span class="o">:</span> <span class="nb">window</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">},</span>
         <span class="nx">GLOBAL_HANDLER</span>     <span class="o">=</span> <span class="s2">&quot;ClipboardInterfaceFn&quot;</span><span class="p">,</span>
         <span class="nx">PROTOCOL</span>           <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^https/i</span><span class="p">)</span> <span class="o">?</span> <span class="s1">&#39;https://&#39;</span> <span class="o">:</span> <span class="s1">&#39;http://&#39;</span><span class="p">,</span>
         <span class="nx">FLASHVARS_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;id={__MOVIEID__}&amp;ns={__NS__}&amp;width={__WIDTH__}&amp;height={__HEIGHT__}&quot;</span><span class="o">+</span>
@@ -176,7 +176,24 @@
     
     <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">NAME</span> <span class="o">=</span> <span class="nx">COMPONENT_NAME</span><span class="p">;</span>
     <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">NS</span>   <span class="o">=</span> <span class="nx">COMPONENT_NAME</span><span class="p">;</span>
- 
+    <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">setCallBackGlobal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">v</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="nx">n</span>   <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">obj</span> <span class="o">=</span> <span class="nb">window</span><span class="p">,</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+            
+        <span class="k">if</span> <span class="p">(</span> <span class="nx">isString</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">v</span> <span class="o">!==</span> <span class="s2">&quot;window&quot;</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nx">tmp</span> <span class="o">=</span> <span class="p">(</span> <span class="nx">v</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span><span class="o">?</span><span class="nx">v</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">:</span> <span class="p">[</span><span class="nx">v</span><span class="p">];</span>
+            <span class="nx">n</span>   <span class="o">=</span> <span class="nx">tmp</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">n</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">tmp</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">obj</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">tmp</span><span class="p">[</span><span class="nx">i</span><span class="p">]];</span>
+                    <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span> <span class="o">+</span> <span class="p">((</span> <span class="nx">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span><span class="o">?</span><span class="nx">tmp</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="o">:</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="nx">tmp</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">CALLBACK_GLOBAL</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;obj&quot;</span> <span class="o">:</span> <span class="nx">obj</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">name</span> <span class="p">};</span>
+        <span class="k">return</span> <span class="nx">CALLBACK_GLOBAL</span><span class="p">;</span>
+    <span class="p">};</span>
     <span class="nx">ClipBoard</span><span class="p">.</span><span class="nx">ATTRS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="cm">/**</span>
 <span class="cm">         * The page attribute represents the topmost node where the flash movie will be embeded only</span>
@@ -213,7 +230,10 @@
 <span class="cm">         * @type Object</span>
 <span class="cm">         */</span>
         <span class="nx">global</span> <span class="o">:</span> <span class="p">{</span>
-            <span class="nx">value</span> <span class="o">:</span> <span class="nx">DEFAULT_GLOBAL</span>
+            <span class="nx">readOnly</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="nx">getter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">{</span> <span class="nx">obj</span> <span class="o">:</span> <span class="nx">CALLBACK_GLOBAL</span><span class="p">.</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">name</span> <span class="o">:</span> <span class="nx">CALLBACK_GLOBAL</span><span class="p">.</span><span class="nx">name</span> <span class="p">};</span>
+            <span class="p">}</span>
         <span class="p">},</span>
         <span class="cm">/**</span>
 <span class="cm">         * The domain value that should be allowed in the flash movie</span>
@@ -244,7 +264,7 @@
         <span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">_this</span>  <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
                 <span class="nx">global</span> <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">),</span>
-                <span class="nx">fn</span>     <span class="o">=</span> <span class="nx">GLOBAL_HANDLER</span><span class="p">,</span>
+                <span class="nx">fn</span>     <span class="o">=</span> <span class="o">!</span><span class="nx">isEmpty</span><span class="p">(</span><span class="nx">global</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span><span class="o">?</span><span class="nx">global</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="nx">GLOBAL_HANDLER</span><span class="o">:</span><span class="nx">GLOBAL_HANDLER</span><span class="p">,</span>
                 <span class="nx">dimen</span><span class="p">;</span>
             <span class="k">if</span><span class="p">(</span><span class="nx">isEmpty</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)))</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="nx">Y</span><span class="p">.</span><span class="nx">guid</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="p">));</span>
@@ -259,8 +279,9 @@
                 
             <span class="nx">dimen</span>  <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">getHostDimensions</span><span class="p">();</span>
             
-            <span class="k">if</span><span class="p">(</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">global</span><span class="p">[</span><span class="nx">fn</span><span class="p">]))</span>
-                <span class="nx">global</span><span class="p">[</span><span class="nx">fn</span><span class="p">]</span>  <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_flashInterface</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nx">isUndefined</span><span class="p">(</span><span class="nx">global</span><span class="p">[</span><span class="s2">&quot;obj&quot;</span><span class="p">][</span><span class="nx">GLOBAL_HANDLER</span><span class="p">])</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nx">global</span><span class="p">[</span><span class="s2">&quot;obj&quot;</span><span class="p">][</span><span class="nx">GLOBAL_HANDLER</span><span class="p">]</span>  <span class="o">=</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">_flashInterface</span><span class="p">;</span>
+            <span class="p">}</span>
             
             <span class="nx">_this</span><span class="p">.</span><span class="nx">_host</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="nx">COMPONENT_NAME</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="p">{</span>
                 <span class="nx">emitFacade</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
@@ -566,6 +587,7 @@
     <span class="p">});</span>
     
     <span class="nx">Y</span><span class="p">.</span><span class="nx">ClipBoard</span> <span class="o">=</span> <span class="nx">ClipBoard</span><span class="p">;</span>
+    
 
 
 <span class="p">},</span> <span class="s1">&#39;@VERSION@&#39;</span> <span class="p">,{</span><span class="nx">skinnable</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">requires</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;plugin&#39;</span><span class="p">,</span> <span class="s1">&#39;substitute&#39;</span><span class="p">]});</span>
